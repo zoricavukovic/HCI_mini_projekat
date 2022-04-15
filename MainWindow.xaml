@@ -1,0 +1,102 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MiniProjekatHCI"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:Wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" x:Class="MiniProjekatHCI.MainWindow"
+        mc:Ignorable="d"
+        Title="Statistics App" Height="600" Width="1000" Background="#FFDCFFB3" Icon="iconApp.png">
+    <Grid Background="#FFDCFFB3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition x:Name="secondRow" Height="7*"/>
+            <RowDefinition Height="13*"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" FontSize="18" Margin="15,10,0,0" Padding="4,10" FontWeight="Bold" Content="Your analytics dashboard" Foreground="#FF2A4191"/>
+        <StackPanel Grid.Row="1" Margin="15,0,15,0">
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0" Background="#FFD2F9A3" VerticalAlignment="Center">
+                <Button x:Name="GDPButton" Background="#FFD2F9A3" Content="Real GDP" MouseEnter="ButtonGDP_MouseEnter" MouseLeave="ButtonGDP_MouseLeave" Click="GDPButtonClick"  HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FF2A4191" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" BorderBrush="#FF2A4191" Margin="5"/>
+                <Button x:Name="TreasuryButton" Background="#FFD2F9A3" Content="Treasury Yield"  MouseEnter="ButtonTreasury_MouseEnter" MouseLeave="ButtonTreasury_MouseLeave" Click="TreasuryButtonClick" HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FF2A4191" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" Margin="5" BorderBrush="#FF2A4191"/>
+            </StackPanel>
+
+            <Grid x:Name="additionalInfo" Visibility ="Hidden" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="2" Margin="15,5,0,0" Background="#FFD2F9A3">
+                <Grid.RowDefinitions>
+                    <RowDefinition
+          Height="Auto" />
+                    <RowDefinition
+          Height="*" />
+
+                </Grid.RowDefinitions>
+                <materialDesign:ColorZone
+        Mode="SecondaryMid"
+        Padding="8" Background="#FFD2F9A3" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <StackPanel 
+          Orientation="Horizontal" Background="#FFD2F9A3" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                        <TextBlock Padding="10"
+            Margin="15,0,10,0"
+            VerticalAlignment="Center"
+            Text="Interval" FontWeight="Bold" FontSize="14" Foreground="#FF2A4191" />
+                        <ComboBox  materialDesign:HintAssist.Hint="Check Interval"  x:Name="IntervalCombo" SelectionChanged="IntervalCombo_SelectionChanged" FontWeight="Bold" FontSize="13" Foreground="#FF2A4191" Padding="10,8" HorizontalAlignment="Center">
+
+                        </ComboBox>
+                        <TextBlock Padding="10"
+            Margin="14,0,10,0"
+            VerticalAlignment="Center" Name="MaturityLabel"
+            Text="Maturity" FontWeight="Bold" FontSize="14" Foreground="#FF2A4191" />
+
+                        <ComboBox  materialDesign:HintAssist.Hint="Check Maturity" x:Name="MaturityComboTr" FontWeight="Bold" FontSize="13" Foreground="#FF2A4191" Padding="10,8" HorizontalAlignment="Center">
+                            <ComboBoxItem x:Name="Month3" FontWeight="Bold" FontSize="13" Foreground="#FF2A4191" Padding="5, 5" HorizontalAlignment="Center" Content="3 Month"/>
+                            <ComboBoxItem x:Name="Year2" FontWeight="Bold" FontSize="13" Foreground="#FF2A4191" Padding="5, 5" HorizontalAlignment="Center" Content="2 Year" BorderBrush="{x:Null}" Background="{x:Null}"/>
+                            <ComboBoxItem x:Name="Year5" FontWeight="Bold" FontSize="13" Foreground="#FF2A4191" Padding="5, 5" HorizontalAlignment="Center" Content="5 Year" BorderBrush="{x:Null}" Background="{x:Null}"/>
+                            <ComboBoxItem x:Name="Year7" FontWeight="Bold" FontSize="13" Foreground="#FF2A4191" Padding="5, 5" HorizontalAlignment="Center" Content="7 Year" BorderBrush="{x:Null}" Background="{x:Null}"/>
+                            <ComboBoxItem x:Name="Year10" FontWeight="Bold" FontSize="13" Foreground="#FF2A4191" Padding="5, 5" HorizontalAlignment="Center" Content="10 Year" BorderBrush="{x:Null}" Background="{x:Null}"/>
+                            <ComboBoxItem x:Name="Year" FontWeight="Bold" FontSize="13" Foreground="#FF2A4191" Padding="5, 5" HorizontalAlignment="Center" Content="30 Year" BorderBrush="{x:Null}" Background="{x:Null}"/>
+                        </ComboBox>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+
+                <Grid
+        Grid.Row="1"
+        Margin="0 6 0 0"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <materialDesign:ColorZone
+        Mode="SecondaryMid"
+        Padding="8" Background="#FFD2F9A3">
+                        <StackPanel 
+          Orientation="Horizontal" Background="#FFD2F9A3" VerticalAlignment="Top" HorizontalAlignment="Left">
+
+                            <TextBlock Padding="8" Margin="15, 0, 0, 0"
+            VerticalAlignment="Center"
+            Text="Date Range" FontWeight="Bold" FontSize="14" Foreground="#FF2A4191" HorizontalAlignment="Left" />
+                            <DatePicker 
+  materialDesign:HintAssist.Hint="Pick Start Date"
+  Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
+                            <DatePicker Margin="5, 0, 0, 0"
+  materialDesign:HintAssist.Hint="Pick End Date"
+                                     
+  Style="{StaticResource MaterialDesignOutlinedDatePicker}"/>
+                        </StackPanel>
+                    </materialDesign:ColorZone>
+
+                </Grid>
+            </Grid>
+            
+
+        </StackPanel>
+        <StackPanel Grid.Row="2" HorizontalAlignment="Center"/>
+        <Wpf:PieChart HorizontalAlignment="Left" Height="215.5" Margin="32,158.186,0,0" Grid.Row="2" VerticalAlignment="Top" Width="464">
+
+        </Wpf:PieChart>
+        <Wpf:CartesianChart HorizontalAlignment="Left" Height="280" Margin="410,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="532"/>
+    </Grid>
+</Window>
