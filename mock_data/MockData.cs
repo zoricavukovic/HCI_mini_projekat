@@ -67,7 +67,7 @@ namespace MiniProjekatHCI.mock_data
                 LoadTr(f, i, m);
         }
 
-        public void LoadGDP(String f, String i)
+        public Data LoadGDP(String f, String i)
         {
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://" + $@"www.alphavantage.co/query?function={f}&interval={i}&apikey={this.apiKey}&datatype=json");
             HttpWebResponse res = (HttpWebResponse)req.GetResponse();
@@ -75,12 +75,28 @@ namespace MiniProjekatHCI.mock_data
             StreamReader sr = new StreamReader(res.GetResponseStream());
             string results = sr.ReadToEnd();
             Data json = JsonConvert.DeserializeObject<Data>(results);
+            try
+            {
+                foreach (PerDataValue v in json.data)
+                {
+                    double doubleVal;
+                    if (Double.TryParse(v.value, out doubleVal)) { v.valueD = doubleVal; }
+                    else { v.valueD = 0.0; }
+                }
+
+                sr.Close();
+            }
+            catch (Exception)
+            {
+                throw new LoadDataException();
+            }
             
-            sr.Close();
+
+            return json;
 
         }
 
-        public void LoadTr(String f, String i, String m)
+        public Data LoadTr(String f, String i, String m)
         {
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://" + $@"www.alphavantage.co/query?function={f}&interval={i}{m}&apikey={this.apiKey}&datatype=json");
             HttpWebResponse res = (HttpWebResponse)req.GetResponse();
@@ -88,13 +104,22 @@ namespace MiniProjekatHCI.mock_data
             StreamReader sr = new StreamReader(res.GetResponseStream());
             string results = sr.ReadToEnd();
             var json = JsonConvert.DeserializeObject<Data>(results);
-            foreach (PerDataValue v in json.data)
+            try
             {
-                double doubleVal;
-                if (Double.TryParse(v.value, out doubleVal)) { v.valueD = doubleVal; }
-                else { v.valueD = 0.0; }
+                foreach (PerDataValue v in json.data)
+                {
+                    double doubleVal;
+                    if (Double.TryParse(v.value, out doubleVal)) { v.valueD = doubleVal; }
+                    else { v.valueD = 0.0; }
+                }
+                sr.Close();
             }
-            sr.Close();
+            catch (Exception)
+            {
+                throw new LoadDataException();
+            }
+
+            return json;
 
         }
 
