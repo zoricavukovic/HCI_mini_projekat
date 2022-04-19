@@ -86,7 +86,11 @@ namespace MiniProjekatHCI
                new ColumnSeries
                 {
                     Title = "2015",
-                    Values = chartValues
+                    Values = chartValues,
+                    Configuration = new CartesianMapper<double>()
+                    .Y(point => point)
+                    .Stroke(point => (point == chartValues.Max()) ? Brushes.Blue : (point == chartValues.Min()) ? Brushes.Red : Brushes.Green)
+                    .Fill(point => (point == chartValues.Max()) ? Brushes.Blue : (point == chartValues.Min()) ? Brushes.Red : Brushes.Green),
                 }
             };
             // var formatter = value => value.ToString("N");
