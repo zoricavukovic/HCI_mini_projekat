@@ -8,75 +8,29 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MiniProjekatHCI.mock_data
 {
     class MockData
     {
         private readonly string apiKey = "G3SDJTDZWHWPMGBV";
-        private string function;
-        public string Function { 
-            get { return function; }
-            set {
-                if (function != value)
-                {
-                    function = value;
-                    OnPropertyChanged("Function");
-                }
-            }
-        }
-        private string interval;
-        public string Interval
-        {
-            get { return interval; }
-            set
-            {
-                if (interval != value)
-                {
-                    interval = value;
-                    OnPropertyChanged("Interval");
-                }
-            }
-        }
-        private string maturity;
-        public string Maturity
-        {
-            get { return maturity; }
-            set
-            {
-                if (maturity != value)
-                {
-                    maturity = value;
-                    OnPropertyChanged("Maturity");
-                }
-            }
-        }
-
-        public MockData()
-        {
-        }
-
-        public MockData(String f, String i, String m)
-        {
-            this.function = f;
-            this.interval = i;
-            this.maturity = m;
-            if (m.Equals(""))
-                LoadGDP(f, i);
-            else
-                LoadTr(f, i, m);
-        }
 
         public Data LoadGDP(String f, String i)
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://" + $@"www.alphavantage.co/query?function={f}&interval={i}&apikey={this.apiKey}&datatype=json");
-            HttpWebResponse res = (HttpWebResponse)req.GetResponse();
-
-            StreamReader sr = new StreamReader(res.GetResponseStream());
-            string results = sr.ReadToEnd();
-            Data json = JsonConvert.DeserializeObject<Data>(results);
             try
             {
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://" + $@"www.alphavantage.co/query?function={f}&interval={i}&apikey={this.apiKey}&datatype=json");
+                HttpWebResponse res = (HttpWebResponse)req.GetResponse();
+
+                StreamReader sr = new StreamReader(res.GetResponseStream());
+                string results = sr.ReadToEnd();
+                Data json = JsonConvert.DeserializeObject<Data>(results);
+                if (json.data == null)
+                {
+                    MessageBox.Show("Loading data failed.Try again!", "Load Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return null;
+                }
                 foreach (PerDataValue v in json.data)
                 {
                     double doubleVal;
@@ -85,27 +39,30 @@ namespace MiniProjekatHCI.mock_data
                 }
 
                 sr.Close();
+                return json;
             }
             catch (Exception)
             {
-                throw new LoadDataException();
+                MessageBox.Show("Loading data failed.Try again!", "Load Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return null;
             }
-            
-
-            return json;
 
         }
 
         public Data LoadTr(String f, String i, String m)
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://" + $@"www.alphavantage.co/query?function={f}&interval={i}{m}&apikey={this.apiKey}&datatype=json");
-            HttpWebResponse res = (HttpWebResponse)req.GetResponse();
+            try { 
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create("http://" + $@"www.alphavantage.co/query?function={f}&interval={i}{m}&apikey={this.apiKey}&datatype=json");
+                HttpWebResponse res = (HttpWebResponse)req.GetResponse();
 
-            StreamReader sr = new StreamReader(res.GetResponseStream());
-            string results = sr.ReadToEnd();
-            var json = JsonConvert.DeserializeObject<Data>(results);
-            try
-            {
+                StreamReader sr = new StreamReader(res.GetResponseStream());
+                string results = sr.ReadToEnd();
+                var json = JsonConvert.DeserializeObject<Data>(results);
+                if (json.data == null)
+                {
+                    MessageBox.Show("Loading data failed.Try again!", "Load Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return null;
+                }
                 foreach (PerDataValue v in json.data)
                 {
                     double doubleVal;
@@ -113,13 +70,13 @@ namespace MiniProjekatHCI.mock_data
                     else { v.valueD = 0.0; }
                 }
                 sr.Close();
+                return json;
             }
             catch (Exception)
             {
-                throw new LoadDataException();
+                MessageBox.Show("Loading data failed.Try again!", "Load Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return null;
             }
-
-            return json;
 
         }
 
@@ -133,18 +90,5 @@ namespace MiniProjekatHCI.mock_data
             }
         }
 
-    }
-    public enum Interval
-    {
-        Annual, Quarterly, Daily, Weekly, Monthly
-    }
-
-    public enum Maturity
-    {
-        Month3, Year2, Year5, Year7, Year10, Year30
-    }
-    public enum Function
-    {
-        REAL_GDP, TREASURY_YIELD
     }
 }

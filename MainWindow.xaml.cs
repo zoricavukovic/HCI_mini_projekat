@@ -40,6 +40,7 @@ namespace MiniProjekatHCI
             
 
             var chartData = md.LoadGDP("REAL_GDP", "quarterly");
+            if (chartData == null) return;
             DateFrom.SelectedDate = (from data in chartData.data
                                      orderby data.date
                                      select data.date).First();
@@ -93,24 +94,28 @@ namespace MiniProjekatHCI
                     .Fill(point => (point == chartValues.Max()) ? Brushes.Blue : (point == chartValues.Min()) ? Brushes.Red : Brushes.Green),
                 }
             };
-            // var formatter = value => value.ToString("N");
 
             var xLabels = (from timeVal in chartData.data
                            where timeVal.date >= dateFrom && timeVal.date <= dateTo
                            orderby timeVal.date
                            select timeVal.date.ToString().Split(' ')[0]
                          ).ToList();
-
+            
             columnChart.AxisX.Add(new Axis
             {
-                Title = "Datum",
-                Labels = xLabels
+                Title = "Date",
+                Labels = xLabels,
+                Foreground = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191")),
+                FontSize = 14 
 
-            }) ;
+
+            }); 
             columnChart.AxisY.Add(new Axis
             {
                 Title = chartData.unit,
-                LabelFormatter = value => value.ToString("C")
+                LabelFormatter = value => value.ToString("C"),
+                Foreground = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191")),
+                FontSize = 14
 
             });
 
@@ -121,8 +126,6 @@ namespace MiniProjekatHCI
         private void loadLineChart(Data chartData)
         {
             
-
-
             lineChart.Series.Clear();
             lineChart.AxisX.Clear();
             lineChart.AxisY.Clear();
@@ -145,14 +148,18 @@ namespace MiniProjekatHCI
             lineChart.AxisX.Add(new LiveCharts.Wpf.Axis
             {
                 Title = "Date",
-                Labels = xLabels
+                Labels = xLabels,
+                Foreground = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191")),
+                FontSize = 14
 
             });
 
             lineChart.AxisY.Add(new Axis
             {
                 Title = chartData.unit,
-                LabelFormatter = value => value.ToString("C")
+                LabelFormatter = value => value.ToString("C"),
+                Foreground = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191")),
+                FontSize = 14
 
             });
 
@@ -171,7 +178,7 @@ namespace MiniProjekatHCI
                 chartValues.Add(value);
 
                 var point = new Point() { X = year.ToOADate(), Y = value };
-                //chartValues.Add(point);
+                
             }
 
             series.Add(new LineSeries()
@@ -182,7 +189,7 @@ namespace MiniProjekatHCI
                     .Y(point => point)
                     .Stroke(point => (point == chartValues.Max()) ? Brushes.Blue : (point == chartValues.Min()) ? Brushes.Red : Brushes.Green)
                     .Fill(point => (point == chartValues.Max()) ? Brushes.Blue : (point == chartValues.Min()) ? Brushes.Red : Brushes.Green),
-                PointGeometrySize = 3,
+                PointGeometrySize = 3
             });
 
 
@@ -223,6 +230,9 @@ namespace MiniProjekatHCI
             try
             {
                 chartData = md.LoadGDP("REAL_GDP", "annual");
+                if ( (chartData) == null){
+                    return;
+                }
                 
                 DateFrom.SelectedDate = (from data in chartData.data
                                          orderby data.date
@@ -284,17 +294,9 @@ namespace MiniProjekatHCI
             IntervalCombo.SelectedIndex = 2;
 
             var chartData = md.LoadGDP("TREASURY_YIELD", "monthly");
+            if (chartData == null) return;
             loadLineChart(chartData);
             loadOhclChart(chartData);
-            //DateFrom.SelectedDate = (from data in chartData.data
-            //                         orderby data.date
-            //                         select data.date).First();
-            //DateFrom.BlackoutDates.Clear();
-            //DateFrom.BlackoutDates.Add(new CalendarDateRange(new DateTime(1, 1, 1), ((DateTime)DateFrom.SelectedDate).AddDays(-1)));
-
-            //DateTo.SelectedDate = (from data in chartData.data
-            //                       orderby data.date descending
-            //                       select data.date).First();
         }
 
         private void ButtonTreasury_MouseLeave(object sender, MouseEventArgs e)
@@ -348,6 +350,7 @@ namespace MiniProjekatHCI
                 try
                 {
                     chartData = md.LoadGDP("REAL_GDP", selected);
+                    if (chartData == null) return;
                     loadLineChart(chartData);
                     loadOhclChart(chartData);
                 }
@@ -368,16 +371,12 @@ namespace MiniProjekatHCI
                 if (MaturityComboTr.SelectedItem == null)
                 {
                     Data chartData = null;
-                    try
-                    {
-                        chartData = md.LoadTr("TREASURY_YIELD", selected.ToLower(), "");
-                        loadLineChart(chartData);
-                        loadOhclChart(chartData);
-                    }
-                    catch (LoadDataException ex)
-                    {
-                        MessageBox.Show(ex.Message, "Load Data", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
+                    
+                    chartData = md.LoadTr("TREASURY_YIELD", selected.ToLower(), "");
+                    if (chartData == null) return;
+                    loadLineChart(chartData);
+                    loadOhclChart(chartData);
+                    
                    
                 }
                 else
@@ -385,16 +384,11 @@ namespace MiniProjekatHCI
                     ComboBoxItem item = (ComboBoxItem)MaturityComboTr.SelectedItem;
                     string selectedM = string.Join("",item.Content.ToString().ToLower().Split(' '));
                     Data chartData = null;
-                    try
-                    {
-                        chartData = md.LoadTr("TREASURY_YIELD", selected.ToLower(), "&maturity=" + selectedM);
-                        loadLineChart(chartData);
-                        loadOhclChart(chartData);
-                    }
-                    catch (LoadDataException ex)
-                    {
-                        MessageBox.Show(ex.Message, "Load Data", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
+                    
+                    chartData = md.LoadTr("TREASURY_YIELD", selected.ToLower(), "&maturity=" + selectedM);
+                    if (chartData == null) return;
+                    loadLineChart(chartData);
+                    loadOhclChart(chartData);
                     
                 }
             }
@@ -480,7 +474,6 @@ namespace MiniProjekatHCI
 
                 }
 
-
             }
 
             else if (clickedGDPButton)
@@ -496,7 +489,6 @@ namespace MiniProjekatHCI
                     DateFrom.SelectedDate = new DateTime(1929, 1, 1);
 
             }
-
 
         }
     }
