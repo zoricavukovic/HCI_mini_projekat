@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Title="Table view"
     Height="450"
-    Width="800"
+    Width="600"
     Background="#FFDCFFB3"
     Icon="iconApp.png">
     <Grid
@@ -30,12 +30,12 @@
         <Label
             Name="Headerlbl"
             Grid.Row="0"
-            FontSize="20"
-            Margin="0,7,0,0"
+            FontSize="18"
+            Margin="15,7,0,0"
             Padding="4,10"
             FontWeight="Bold"
             HorizontalContentAlignment="Center"
-            Foreground="#FF2A4191" />
+            Foreground="#FF2A4191" HorizontalAlignment="Left" />
 
         <materialDesign:ColorZone
             Mode="SecondaryMid"
@@ -43,39 +43,38 @@
             Padding="0"
             Background="#FFD2F9A3"
             VerticalAlignment="Top"
+            Margin="15,0,0,0"
             HorizontalAlignment="Left">
-            <StackPanel>
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center">
                 <StackPanel
                     Orientation="Horizontal"
                     Background="#FFD2F9A3"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Left">
+                    VerticalAlignment="Center" HorizontalAlignment="Left">
 
                     <TextBlock
                         x:Name="IntervalTextBlock"
                         Padding="10,10,5,10"
-                        Margin="0,0,0,0"
                         VerticalAlignment="Center"
                         Text="Interval: "
                         FontWeight="Bold"
                         FontSize="14"
-                        Foreground="#FF2A4191" />
+                        Foreground="#FF2A4191" HorizontalAlignment="Center" />
                     <Label
                         Padding="0,10,5,10"
                         x:Name="IntervalLbl"
                         FontWeight="Bold"
                         FontSize="14"
                         Foreground="#FF2A4191"
-                        HorizontalContentAlignment="Left" />
+                        HorizontalContentAlignment="Center" HorizontalAlignment="Center" />
                     <TextBlock
-                        Padding="10,10,3,10"
-                        Margin="10,0,0,0"
+                        Padding="10,10,5,10"
                         VerticalAlignment="Center"
                         x:Name="MaturityTextBlock"
                         Text="Maturity: "
                         FontWeight="Bold"
                         FontSize="14"
-                        Foreground="#FF2A4191" />
+                        Foreground="#FF2A4191" 
+                        Visibility="Hidden"/>
                     <Label
                         Padding="0,10,5,10"
                         x:Name="MaturityLbl"
@@ -87,15 +86,13 @@
                 <StackPanel
                     Orientation="Horizontal"
                     Background="#FFD2F9A3"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Left">
+                    VerticalAlignment="Center" HorizontalAlignment="Left">
 
                     <TextBlock
                         x:Name="DateRangeTextBlock"
                         Padding="10,10,5,10"
-                        Margin="0,0,0,0"
                         VerticalAlignment="Center"
-                        Text="DateRange: "
+                        Text="DateRange:"
                         FontWeight="Bold"
                         FontSize="14"
                         Foreground="#FF2A4191" />
@@ -109,25 +106,37 @@
                 </StackPanel>
             </StackPanel>
         </materialDesign:ColorZone>
-
-
-        <Rectangle
-            Grid.Row="2"
-            HorizontalAlignment="Stretch"
-            Fill="#FF2A4191"
-            Height="1" />
-
-            <DataGrid
+        <DataGrid
                 Name="dt"
                 IsReadOnly="True"
                 Padding="5"
                 Grid.Row="3"
                 Background="#FFDCFFB3"
+                Foreground="#FF2A4191"
+                CanUserSortColumns="True"
+                BorderThickness ="1, 1, 1, 1"
+                BorderBrush="#FF2A4191"
                 ScrollViewer.CanContentScroll="True"
-                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                AlternatingRowBackground="#FFD2F9A3">
-            </DataGrid>
-        
+                AlternatingRowBackground="#FFDCFFB3" HorizontalAlignment="Center" Margin="0,5,0,0">
+            <DataGrid.Resources>
+                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}" >
+                    <Setter Property="Background" Value="#FFD2F9A3" />
+                    <Setter Property="Foreground" Value="#FF2A4191" />
+                    <Setter Property="BorderBrush" Value="#FF2A4191"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="BorderThickness" Value="1 1 1 1"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                </Style>
+            </DataGrid.Resources>
 
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Width="*" Binding="{Binding Date}" FontSize="13"></DataGridTextColumn>
+                <DataGridTextColumn x:Name="ValueColumn" Header="Value" Width="*" Binding="{Binding Value}" FontSize="13">
+
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

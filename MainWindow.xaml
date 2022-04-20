@@ -3,31 +3,34 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
-        xmlns:local="clr-namespace:MiniProjekatHCI"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:Wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" xmlns:Wpf1="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Plus" x:Class="MiniProjekatHCI.MainWindow"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:Wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" x:Class="MiniProjekatHCI.MainWindow"
         mc:Ignorable="d"
         Title="Statistics App" Height="600" Width="1150" Background="#FFDCFFB3" Icon="iconApp.png">
     <Grid Background="#FFDCFFB3" Margin="0,0,-52.5,-153">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
             <RowDefinition x:Name="secondRow" Height="7*"/>
-            <RowDefinition Height="18*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="16*"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="0" FontSize="18" Margin="15,10,0,0" Padding="4,10" FontWeight="Bold" Content="Your analytics dashboard" Foreground="#FF2A4191"/>
-        <StackPanel Grid.Row="1" Margin="15,0,15,0">
+        <Label Grid.Row="0" Grid.ColumnSpan="2" FontSize="18" Margin="15,10,0,0" Padding="4,10" FontWeight="Bold" Content="Your analytics dashboard" Foreground="#FF2A4191"/>
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="15,0,15,0">
             <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,0" Background="#FFD2F9A3" VerticalAlignment="Center">
                 <Button x:Name="GDPButton" Background="#FFD2F9A3" Content="Real GDP" MouseEnter="ButtonGDP_MouseEnter" MouseLeave="ButtonGDP_MouseLeave" Click="GDPButtonClick"  HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FF2A4191" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" BorderBrush="#FF2A4191" Margin="5"/>
                 <Button x:Name="TreasuryButton" Background="#FFD2F9A3" Content="Treasury Yield"  MouseEnter="ButtonTreasury_MouseEnter" MouseLeave="ButtonTreasury_MouseLeave" Click="TreasuryButtonClick" HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FF2A4191" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" Margin="5" BorderBrush="#FF2A4191"/>
             </StackPanel>
 
-            <Grid x:Name="additionalInfo" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="2" Margin="15,5,0,0" Background="#FFD2F9A3">
+            <Grid  x:Name="additionalInfo" Visibility="Hidden" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="2" Margin="15,5,0,0" Background="#FFD2F9A3">
                 <Grid.RowDefinitions>
-                    <RowDefinition
-          Height="Auto" />
-                    <RowDefinition
-          Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition/>
 
                 </Grid.RowDefinitions>
                 <materialDesign:ColorZone
@@ -65,8 +68,6 @@
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <materialDesign:ColorZone
         Mode="SecondaryMid"
@@ -88,22 +89,26 @@
   Style="{StaticResource MaterialDesignOutlinedDatePicker}"/>
                             <Button x:Name="LoadChart" Click="LoadChart_Click" Background="#FF2A4191" Content="Load Chart" MouseEnter="ButtonGDP_MouseEnter" MouseLeave="ButtonGDP_MouseLeave"  HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FFD2F9A3" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" BorderBrush="#FFD2F9A3" Margin="20,5,5,5" FontSize="16"/>
                             <Button x:Name="LoadTable" Click="LoadTable_Click" Background="#FF2A4191" Content="Load Table" MouseEnter="ButtonGDP_MouseEnter" MouseLeave="ButtonGDP_MouseLeave"  HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FFD2F9A3" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" BorderBrush="#FFD2F9A3" Margin="20,5,5,5" FontSize="16"/>
+                            
                         </StackPanel>
+                        
                     </materialDesign:ColorZone>
-
+                   
                 </Grid>
-            </Grid>
-            <Label x:Name="label1_Copy" FontSize="18" Margin="0,0,466.5,0" Padding="4,10" FontWeight="Bold" Content="" Foreground="#FF2A4191" Height="75.245"/>
 
+            </Grid>
+            
 
         </StackPanel>
-        <StackPanel Grid.Row="2" HorizontalAlignment="Center"/>
-        <Wpf:CartesianChart Name="lineChart" Zoom="X" HorizontalAlignment="Left" Height="280" Margin="597.5,40.84,0,0" Grid.Row="2" VerticalAlignment="Top" Width="532"/>
+        <TextBlock Grid.Row="2" x:Name="notificationLabel" Margin="15,0,0,0" Padding="4,10" FontWeight="Bold" Foreground="#FF6272AA" HorizontalAlignment="Left" Grid.RowSpan="2" Visibility="Hidden" VerticalAlignment="Top"/>
 
-        <Label Grid.Row="1" Name="label" FontSize="18" Margin="547.5,170.281,-51,422.993" Padding="4,10" FontWeight="Bold" Content="" Foreground="#FF2A4191" Grid.RowSpan="2"/>
-        <Wpf:CartesianChart Name="columnChart" Zoom="X"  HorizontalAlignment="Left" Height="280" Margin="15,40.84,0,0" Grid.Row="2" VerticalAlignment="Top" Width="552.25"/>
-        <Label Grid.Row="1" x:Name="label1" FontSize="18" Margin="-31.5,170.281,528,422.993" Padding="4,10" FontWeight="Bold" Content="" Foreground="#FF2A4191" Grid.RowSpan="2"/>
-        <Label Grid.Row="1" Visibility="Hidden" x:Name="notificationLabel" Margin="574,40,0,82.66" Padding="4,10" FontWeight="Bold" Content="" Foreground="#FF6272AA"/>
+        <Label Grid.Row="3" x:Name="label1" FontSize="18" Margin="15,0,0,0" Padding="4,10" FontWeight="Bold" Content="" Foreground="#FF2A4191"/>
+        <Wpf:CartesianChart Name="columnChart" Zoom="X" Margin="15,40,25,150" Grid.Row="4"/>
 
+        <Label Grid.Row="3" Name="label" FontSize="18"  Padding="4,10" FontWeight="Bold" Content="" Foreground="#FF2A4191" Margin="15,0,0,0" Grid.Column="1"/>
+
+        <Wpf:CartesianChart Name="lineChart" Zoom="X" Margin="15,40,45,150" Grid.Row="4" Grid.Column="1"/>
+
+        
     </Grid>
 </Window>
