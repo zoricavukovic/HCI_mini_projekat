@@ -120,9 +120,6 @@ namespace MiniProjekatHCI
 
         private void loadLineChart(Data chartData)
         {
-            
-
-
             lineChart.Series.Clear();
             lineChart.AxisX.Clear();
             lineChart.AxisY.Clear();
@@ -138,9 +135,6 @@ namespace MiniProjekatHCI
                            orderby timeVal.date
                            select timeVal.date.ToString().Split(' ')[0]
                           ).ToList();
-
-            
-
 
             lineChart.AxisX.Add(new LiveCharts.Wpf.Axis
             {
@@ -185,11 +179,7 @@ namespace MiniProjekatHCI
                 PointGeometrySize = 3,
             });
 
-
-
             lineChart.Series = series;
-
-
 
         }
 
@@ -332,30 +322,42 @@ namespace MiniProjekatHCI
 
       
 
-        private void LoadChart_Click(object sender, RoutedEventArgs e)
+
+        private void LoadTable_Click(object sender, RoutedEventArgs e)
         {
-            
+            Data chartData = GetDataByCriteria();
+            if (chartData == null)
+            {
+                MessageBox.Show("Error on loading data", "Error on loading data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            else
+            {
+                TableDTO tableDTO = new TableDTO(clickedGDPButton, GetClickedIntervalName(), GetSelectedMaturity(), GetSelectedStartDate(), GetSelectedEndDate(), getFilteredDataByTimeCriteria(chartData));
+                TableWindow tableWindow = new TableWindow(tableDTO);
+                tableWindow.Show();
+            }
+        }
+
+        private List<PerDataValue> getFilteredDataByTimeCriteria(Data chartData)
+        {
+            return (from c in chartData.data
+                    where c.date >= GetSelectedStartDate() && c.date <= GetSelectedEndDate()
+                    select c
+                   ).ToList();
+        }
+
+        public String GetClickedIntervalName()
+        {
             if (clickedGDPButton)
             {
                 string selected = "annualy";
                 if (IntervalCombo.SelectedItem != null)
                 {
                     ComboBoxItem item = (ComboBoxItem)IntervalCombo.SelectedItem;
-                    selected =item.Content.ToString().ToLower();
+                    selected = item.Content.ToString().ToLower();
                 }
-
-                Data chartData = null;
-                try
-                {
-                    chartData = md.LoadGDP("REAL_GDP", selected);
-                    loadLineChart(chartData);
-                    loadOhclChart(chartData);
-                }
-                catch (LoadDataException ex)
-                {
-                    MessageBox.Show(ex.Message, "Load Data", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-                
+                return selected;
             }
             else
             {
@@ -365,40 +367,86 @@ namespace MiniProjekatHCI
                     ComboBoxItem item = (ComboBoxItem)IntervalCombo.SelectedItem;
                     selected = item.Content.ToString().ToLower();
                 }
-                if (MaturityComboTr.SelectedItem == null)
+                return selected;
+            }
+        }
+        public String GetSelectedMaturity()
+        {
+            if (MaturityComboTr.SelectedItem != null)
+            {
+                ComboBoxItem item = (ComboBoxItem)MaturityComboTr.SelectedItem;
+                string selectedM = string.Join("", item.Content.ToString().ToLower().Split(' '));
+                return selectedM;
+            }
+            return null;
+        }
+
+        public DateTime GetSelectedStartDate()
+        {
+            return DateFrom.SelectedDate.Value;
+        }
+        public DateTime GetSelectedEndDate()
+        {
+            return DateTo.SelectedDate.Value;
+        }
+
+        private void LoadChart_Click(object sender, RoutedEventArgs e)
+        {
+            Data chartData = GetDataByCriteria();
+            if (chartData == null)
+            {
+                MessageBox.Show("Error on loading data from api", "Error on loading data from api", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            else
+            {
+                loadLineChart(chartData);
+                loadOhclChart(chartData);
+            }
+        }
+
+        public Data GetDataByCriteria()
+        {
+            Data retVal = null;
+            try
+            {
+                if (clickedGDPButton)
                 {
-                    Data chartData = null;
-                    try
+                    string selected = "annualy";
+                    if (IntervalCombo.SelectedItem != null)
                     {
-                        chartData = md.LoadTr("TREASURY_YIELD", selected.ToLower(), "");
-                        loadLineChart(chartData);
-                        loadOhclChart(chartData);
+                        ComboBoxItem item = (ComboBoxItem)IntervalCombo.SelectedItem;
+                        selected = item.Content.ToString().ToLower();
                     }
-                    catch (LoadDataException ex)
-                    {
-                        MessageBox.Show(ex.Message, "Load Data", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-                   
+                    retVal = md.LoadGDP("REAL_GDP", selected);
                 }
                 else
                 {
-                    ComboBoxItem item = (ComboBoxItem)MaturityComboTr.SelectedItem;
-                    string selectedM = string.Join("",item.Content.ToString().ToLower().Split(' '));
-                    Data chartData = null;
-                    try
+                    string selected = "monthly";
+                    if (IntervalCombo.SelectedItem != null)
                     {
-                        chartData = md.LoadTr("TREASURY_YIELD", selected.ToLower(), "&maturity=" + selectedM);
-                        loadLineChart(chartData);
-                        loadOhclChart(chartData);
+                        ComboBoxItem item = (ComboBoxItem)IntervalCombo.SelectedItem;
+                        selected = item.Content.ToString().ToLower();
                     }
-                    catch (LoadDataException ex)
+                    if (MaturityComboTr.SelectedItem == null)
                     {
-                        MessageBox.Show(ex.Message, "Load Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        retVal = md.LoadTr("TREASURY_YIELD", selected.ToLower(), "");
                     }
-                    
+                    else
+                    {
+                        ComboBoxItem item = (ComboBoxItem)MaturityComboTr.SelectedItem;
+                        string selectedM = string.Join("", item.Content.ToString().ToLower().Split(' '));
+                        retVal = md.LoadTr("TREASURY_YIELD", selected.ToLower(), "&maturity=" + selectedM);
+                    }
                 }
+                return retVal;
+
             }
-        }
+            catch (LoadDataException ex)
+            {
+                return null;
+            }
+        } 
+
 
         private void DateFrom_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {

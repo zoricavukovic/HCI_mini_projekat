@@ -22,7 +22,7 @@
                 <Button x:Name="TreasuryButton" Background="#FFD2F9A3" Content="Treasury Yield"  MouseEnter="ButtonTreasury_MouseEnter" MouseLeave="ButtonTreasury_MouseLeave" Click="TreasuryButtonClick" HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FF2A4191" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" Margin="5" BorderBrush="#FF2A4191"/>
             </StackPanel>
 
-            <Grid x:Name="additionalInfo" Visibility ="Hidden" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="2" Margin="15,5,0,0" Background="#FFD2F9A3">
+            <Grid x:Name="additionalInfo" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="2" Margin="15,5,0,0" Background="#FFD2F9A3">
                 <Grid.RowDefinitions>
                     <RowDefinition
           Height="Auto" />
@@ -87,6 +87,7 @@
                                      
   Style="{StaticResource MaterialDesignOutlinedDatePicker}"/>
                             <Button x:Name="LoadChart" Click="LoadChart_Click" Background="#FF2A4191" Content="Load Chart" MouseEnter="ButtonGDP_MouseEnter" MouseLeave="ButtonGDP_MouseLeave"  HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FFD2F9A3" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" BorderBrush="#FFD2F9A3" Margin="20,5,5,5" FontSize="16"/>
+                            <Button x:Name="LoadTable" Click="LoadTable_Click" Background="#FF2A4191" Content="Load Table" MouseEnter="ButtonGDP_MouseEnter" MouseLeave="ButtonGDP_MouseLeave"  HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FFD2F9A3" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" BorderBrush="#FFD2F9A3" Margin="20,5,5,5" FontSize="16"/>
                         </StackPanel>
                     </materialDesign:ColorZone>
 

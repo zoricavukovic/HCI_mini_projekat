@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MiniProjekatHCI.model
 {
-    class Data
+    public class Data
     {
         public string name { get; set; }
         public string interval { get; set; }
