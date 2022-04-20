@@ -30,7 +30,9 @@ namespace MiniProjekatHCI
     {
         private bool clickedGDPButton = false;
         private bool clickedTreasuryButton = false;
+        private ErrorWindow errorWindow;
         private MockData md;
+        private string title = "Real GDP";
         
 
         public MainWindow()
@@ -39,7 +41,8 @@ namespace MiniProjekatHCI
             md = new MockData();
             
 
-            var chartData = md.LoadGDP("REAL_GDP", "quarterly");
+            var chartData = md.LoadGDP("REAL_GDP", "annual");
+            if (chartData == null) return;
             DateFrom.SelectedDate = (from data in chartData.data
                                      orderby data.date
                                      select data.date).First();
@@ -85,7 +88,7 @@ namespace MiniProjekatHCI
             {
                new ColumnSeries
                 {
-                    Title = "2015",
+                    Title = this.title,
                     Values = chartValues,
                     Configuration = new CartesianMapper<double>()
                     .Y(point => point)
@@ -103,14 +106,18 @@ namespace MiniProjekatHCI
 
             columnChart.AxisX.Add(new Axis
             {
-                Title = "Datum",
-                Labels = xLabels
+                Title = "Date",
+                Labels = xLabels,
+                Foreground = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191")),
+                FontSize = 14
 
             }) ;
             columnChart.AxisY.Add(new Axis
             {
                 Title = chartData.unit,
-                LabelFormatter = value => value.ToString("C")
+                LabelFormatter = value => value.ToString("C"),
+                Foreground = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191")),
+                FontSize = 14
 
             });
 
@@ -139,14 +146,18 @@ namespace MiniProjekatHCI
             lineChart.AxisX.Add(new LiveCharts.Wpf.Axis
             {
                 Title = "Date",
-                Labels = xLabels
+                Labels = xLabels,
+                Foreground = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191")),
+                FontSize = 14
 
             });
 
             lineChart.AxisY.Add(new Axis
             {
                 Title = chartData.unit,
-                LabelFormatter = value => value.ToString("C")
+                LabelFormatter = value => value.ToString("C"),
+                Foreground = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191")),
+                FontSize = 14
 
             });
 
@@ -165,18 +176,18 @@ namespace MiniProjekatHCI
                 chartValues.Add(value);
 
                 var point = new Point() { X = year.ToOADate(), Y = value };
-                //chartValues.Add(point);
+           
             }
 
             series.Add(new LineSeries()
             {
-                Title = "Real GDP",
+                Title = this.title,
                 Values = chartValues,
                 Configuration = new CartesianMapper<double>()
                     .Y(point => point)
                     .Stroke(point => (point == chartValues.Max()) ? Brushes.Blue : (point == chartValues.Min()) ? Brushes.Red : Brushes.Green)
                     .Fill(point => (point == chartValues.Max()) ? Brushes.Blue : (point == chartValues.Min()) ? Brushes.Red : Brushes.Green),
-                PointGeometrySize = 3,
+                PointGeometrySize = 3
             });
 
             lineChart.Series = series;
@@ -187,6 +198,7 @@ namespace MiniProjekatHCI
         {
             clickedGDPButton = true;
             clickedTreasuryButton = false;
+            this.title = "Real GDP";
             GDPButton.BorderBrush = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191"));
             GDPButton.BorderThickness = (Thickness)(new ThicknessConverter().ConvertFrom("0, 0, 0, 3"));
             TreasuryButton.BorderBrush = (Brush)(new BrushConverter().ConvertFrom("#FFFFFFFF"));
@@ -213,7 +225,11 @@ namespace MiniProjekatHCI
             try
             {
                 chartData = md.LoadGDP("REAL_GDP", "annual");
-                
+                if (chartData == null)
+                {
+                    
+                    return;
+                }
                 DateFrom.SelectedDate = (from data in chartData.data
                                          orderby data.date
                                          select data.date).First();
@@ -227,9 +243,10 @@ namespace MiniProjekatHCI
                 loadLineChart(chartData);
                 loadOhclChart(chartData);
             }
-            catch (LoadDataException ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message, "Load Data", MessageBoxButton.OK, MessageBoxImage.Warning);
+                errorWindow = new ErrorWindow("Loading data failed. Try again later.");
+                errorWindow.ShowDialog();
             }
         }
 
@@ -253,6 +270,7 @@ namespace MiniProjekatHCI
         {
             clickedGDPButton = false;
             clickedTreasuryButton = true;
+            this.title = "Treasury Yield";
             TreasuryButton.BorderBrush = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191"));
             TreasuryButton.BorderThickness = (Thickness)(new ThicknessConverter().ConvertFrom("0, 0, 0, 3"));
             GDPButton.BorderBrush = (Brush)(new BrushConverter().ConvertFrom("#FFFFFFFF"));
@@ -274,17 +292,9 @@ namespace MiniProjekatHCI
             IntervalCombo.SelectedIndex = 2;
 
             var chartData = md.LoadGDP("TREASURY_YIELD", "monthly");
+            if (chartData == null) return;
             loadLineChart(chartData);
             loadOhclChart(chartData);
-            //DateFrom.SelectedDate = (from data in chartData.data
-            //                         orderby data.date
-            //                         select data.date).First();
-            //DateFrom.BlackoutDates.Clear();
-            //DateFrom.BlackoutDates.Add(new CalendarDateRange(new DateTime(1, 1, 1), ((DateTime)DateFrom.SelectedDate).AddDays(-1)));
-
-            //DateTo.SelectedDate = (from data in chartData.data
-            //                       orderby data.date descending
-            //                       select data.date).First();
         }
 
         private void ButtonTreasury_MouseLeave(object sender, MouseEventArgs e)
@@ -328,11 +338,12 @@ namespace MiniProjekatHCI
             Data chartData = GetDataByCriteria();
             if (chartData == null)
             {
-                MessageBox.Show("Error on loading data", "Error on loading data", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             else
             {
+                loadLineChart(chartData);
+                loadOhclChart(chartData);
                 TableDTO tableDTO = new TableDTO(clickedGDPButton, GetClickedIntervalName(), GetSelectedMaturity(), GetSelectedStartDate(), GetSelectedEndDate(), getFilteredDataByTimeCriteria(chartData));
                 TableWindow tableWindow = new TableWindow(tableDTO);
                 tableWindow.Show();
@@ -395,7 +406,7 @@ namespace MiniProjekatHCI
             Data chartData = GetDataByCriteria();
             if (chartData == null)
             {
-                MessageBox.Show("Error on loading data from api", "Error on loading data from api", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
             else
             {
@@ -441,8 +452,10 @@ namespace MiniProjekatHCI
                 return retVal;
 
             }
-            catch (LoadDataException ex)
+            catch (Exception)
             {
+                errorWindow = new ErrorWindow("Loading data failed. Try again later.");
+                errorWindow.ShowDialog();
                 return null;
             }
         } 
@@ -508,26 +521,25 @@ namespace MiniProjekatHCI
                 {
                     DateFrom.SelectedDate = DateTime.Now.AddMonths(-3);
                     notificationLabel.Visibility = Visibility.Visible;
-                    notificationLabel.Content = "* Because you selected daily interval you can only select 3 month period.";
+                    notificationLabel.Text = "* Because you selected daily interval you can only select 3 month period.";
                 }
                 else if (selected.Equals("weekly"))
                 {
                     DateFrom.SelectedDate = DateTime.Now.AddYears(-2);
                     notificationLabel.Visibility = Visibility.Visible;
-                    notificationLabel.Content = "* Because you selected weekly interval you can only select 2 year period.";
+                    notificationLabel.Text = "* Because you selected weekly interval you can only select 2 year period.";
                 }
                 else if (selected.Equals("monthly"))
                 {
                     DateFrom.SelectedDate = DateTime.Now.AddYears(-6);
                     notificationLabel.Visibility = Visibility.Visible;
-                    notificationLabel.Content = "* Because you selected monthly interval you can only select 6 year period.";
+                    notificationLabel.Text = "* Because you selected monthly interval you can only select 6 year period.";
                 }
                 else
                 {
                     notificationLabel.Visibility = Visibility.Hidden;
 
                 }
-
 
             }
 
@@ -544,7 +556,6 @@ namespace MiniProjekatHCI
                     DateFrom.SelectedDate = new DateTime(1929, 1, 1);
 
             }
-
 
         }
     }

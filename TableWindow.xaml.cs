@@ -23,9 +23,9 @@ namespace MiniProjekatHCI
     public class TableRow
     {
         public String Date { get; set; }
-        public String Value { get; set; }
+        public double Value { get; set; }
 
-        public TableRow(DateTime timeVal, String value)
+        public TableRow(DateTime timeVal, double value)
         {
             Date = timeVal.ToString().Split(' ')[0];
             Value = value;
@@ -51,7 +51,7 @@ namespace MiniProjekatHCI
         private void fillFields()
         {
             Headerlbl.Content = tableDTO.GDPselected
-                ? "Real Gross Domestic Product table data"
+                ? "Real Gross Domestic Product Table Data"
                 : tableDTO.SelectedMaturity + " Treasury Constant Maturity Rate Table Data";
 
             IntervalLbl.Content = tableDTO.IntervalName;
@@ -62,30 +62,32 @@ namespace MiniProjekatHCI
             }
             else
             {
-                MaturityLbl.Content = tableDTO.SelectedMaturity;
+                var a = tableDTO.SelectedMaturity;
+                if (tableDTO.SelectedMaturity != null)
+                {
+                    MaturityTextBlock.Visibility = Visibility.Visible;
+                    MaturityLbl.Content = tableDTO.SelectedMaturity;
+                    
+                }
+                else
+                {
+                    MaturityTextBlock.Visibility = Visibility.Hidden;
+                    MaturityLbl.Visibility = Visibility.Hidden;
+                }
             }
 
             DateRangeLbl.Content = tableDTO.SelectedStartDate.ToString().Split(' ')[0] + " - " + tableDTO.SelectedEndDate.ToString().Split(' ')[0];
         }
         private void fillTable()
         {
-            var dateColumn = new DataGridTextColumn();
-            dateColumn.Header = "Date";
-            dateColumn.Binding = new Binding("Date");
-            
-            dt.Columns.Add(dateColumn);
-
-            var valueColumn = new DataGridTextColumn();
-            valueColumn.Binding = new Binding("Value");
             if (tableDTO.GDPselected)
             {
-                valueColumn.Header = "Billions of dollars";
+                ValueColumn.Header = "Billions Of Dollars ($)";
             }
             else
             {
-                valueColumn.Header = "Percent";
+                ValueColumn.Header = "Percent (%)";
             }
-            dt.Columns.Add(valueColumn);
             
             tableData.ForEach(t => dt.Items.Add(t));
 
@@ -98,11 +100,11 @@ namespace MiniProjekatHCI
             foreach (var i in items) {
                 if (this.tableDTO.GDPselected)
                 {
-                    rows.Add(new TableRow(i.date, i.value + "$"));
+                    rows.Add(new TableRow(i.date, Math.Round(i.valueD, 2)));
                 }
                 else
                 {
-                    rows.Add(new TableRow(i.date, i.value + "%"));
+                    rows.Add(new TableRow(i.date, Math.Round(i.valueD, 2)));
                 }
             }
             return rows;
