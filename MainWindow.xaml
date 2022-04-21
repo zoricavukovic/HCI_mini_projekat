@@ -10,7 +10,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
             <RowDefinition x:Name="secondRow" Height="7*"/>
-            <RowDefinition Height="1*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="16*"/>
         </Grid.RowDefinitions>
@@ -30,7 +29,6 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
-                    <RowDefinition/>
 
                 </Grid.RowDefinitions>
                 <materialDesign:ColorZone
@@ -72,26 +70,73 @@
                     <materialDesign:ColorZone
         Mode="SecondaryMid"
         Padding="8" Background="#FFD2F9A3">
-                        <StackPanel 
-          Orientation="Horizontal" Background="#FFD2F9A3" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <StackPanel>
+                            <StackPanel 
+              Orientation="Horizontal" Background="#FFD2F9A3" VerticalAlignment="Top" HorizontalAlignment="Left">
 
-                            <TextBlock Padding="8" Margin="15, 0, 0, 0"
-            VerticalAlignment="Center"
-            Text="Date Range" FontWeight="Bold" FontSize="14" Foreground="#FF2A4191" HorizontalAlignment="Left" />
-                            <DatePicker SelectedDateChanged="DateFrom_SelectedDateChanged"
-                                Name="DateFrom"
-  materialDesign:HintAssist.Hint="Pick Start Date"
-  Style="{StaticResource MaterialDesignOutlinedDatePicker}" />
-                            <DatePicker Margin="5, 0, 0, 0"
-                                        Name="DateTo"
-  materialDesign:HintAssist.Hint="Pick End Date"
-                                     
-  Style="{StaticResource MaterialDesignOutlinedDatePicker}"/>
-                            <Button x:Name="LoadChart" Click="LoadChart_Click" Background="#FF2A4191" Content="Load Chart" MouseEnter="ButtonGDP_MouseEnter" MouseLeave="ButtonGDP_MouseLeave"  HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FFD2F9A3" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" BorderBrush="#FFD2F9A3" Margin="20,5,5,5" FontSize="16"/>
-                            <Button x:Name="LoadTable" Click="LoadTable_Click" Background="#FF2A4191" Content="Load Table" MouseEnter="ButtonGDP_MouseEnter" MouseLeave="ButtonGDP_MouseLeave"  HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FFD2F9A3" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" BorderBrush="#FFD2F9A3" Margin="20,5,5,5" FontSize="16"/>
+                                <TextBlock Padding="8" Margin="15, 0, 0, 0"
+                VerticalAlignment="Center"
+                Text="Date Range" FontWeight="Bold" FontSize="14" Foreground="#FF2A4191" HorizontalAlignment="Left" />
+                                <DatePicker SelectedDateChanged="DateFrom_SelectedDateChanged"
+                                    Name="DateFrom"
+      materialDesign:HintAssist.Hint="Pick Start Date" FontSize="14" FontWeight="Bold"
+      >
+                                    <DatePicker.Resources>
+                                        <Style x:Key="CustomCalendarDayButton" TargetType="CalendarDayButton" BasedOn="{StaticResource MaterialDesignCalendarDayButton}">
+                                            <Setter Property="materialDesign:CalendarAssist.SelectionColor" Value="#B2F39B"/>
+                                            <Setter Property="materialDesign:CalendarAssist.SelectionForegroundColor" Value="#FF2A4191"/>
+                                        </Style>
+                                        <Style x:Key="CustomCalendarButton" TargetType="CalendarButton" BasedOn="{StaticResource MaterialDesignCalendarButton}">
+                                            <Setter Property="materialDesign:CalendarAssist.SelectionColor" Value="#B2F39B"/>
+                                            <Setter Property="materialDesign:CalendarAssist.SelectionForegroundColor" Value="#FF2A4191"/>
+                                        </Style>
+                                        <Style x:Key="CustomCalendar" TargetType="{x:Type Calendar}" BasedOn="{StaticResource MaterialDesignDatePickerCalendarPortrait}">
+                                            <Setter Property="Background" Value="#FFD2F9A3"/>
+                                            <Setter Property="Foreground" Value="#FF2A4191"/>
+                                            <Setter Property="materialDesign:CalendarAssist.HeaderBackground" Value="#FF2A4191"/>
+                                            <Setter Property="materialDesign:CalendarAssist.HeaderForeground" Value="#FFD2F9A3"/>
+                                            <Setter Property="CalendarDayButtonStyle" Value="{StaticResource CustomCalendarDayButton}"/>
+                                            <Setter Property="CalendarButtonStyle" Value="{StaticResource CustomCalendarButton}"/>
+                                        </Style>
+                                        <Style TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignFloatingHintDatePicker}">
+                                            <Setter Property="CalendarStyle" Value="{StaticResource CustomCalendar}"/>
+                                        </Style>
+                                    </DatePicker.Resources>
+
+                                </DatePicker>
+
+                                <DatePicker Margin="5, 0, 0, 0"
+                                            Name="DateTo"
+      materialDesign:HintAssist.Hint="Pick End Date" FontSize="14" FontWeight="Bold">
+                                    <DatePicker.Resources>
+                                        <Style x:Key="CustomCalendarDayButton" TargetType="CalendarDayButton" BasedOn="{StaticResource MaterialDesignCalendarDayButton}">
+                                            <Setter Property="materialDesign:CalendarAssist.SelectionColor" Value="#B2F39B"/>
+                                            <Setter Property="materialDesign:CalendarAssist.SelectionForegroundColor" Value="#FF2A4191"/>
+                                        </Style>
+                                        <Style x:Key="CustomCalendarButton" TargetType="CalendarButton" BasedOn="{StaticResource MaterialDesignCalendarButton}">
+                                            <Setter Property="materialDesign:CalendarAssist.SelectionColor" Value="#B2F39B"/>
+                                            <Setter Property="materialDesign:CalendarAssist.SelectionForegroundColor" Value="#FF2A4191"/>
+                                        </Style>
+                                        <Style x:Key="CustomCalendar" TargetType="{x:Type Calendar}" BasedOn="{StaticResource MaterialDesignDatePickerCalendarPortrait}">
+                                            <Setter Property="Background" Value="#FFD2F9A3"/>
+                                            <Setter Property="Foreground" Value="#FF2A4191"/>
+                                            <Setter Property="materialDesign:CalendarAssist.HeaderBackground" Value="#FF2A4191"/>
+                                            <Setter Property="materialDesign:CalendarAssist.HeaderForeground" Value="#FFD2F9A3"/>
+                                            <Setter Property="CalendarDayButtonStyle" Value="{StaticResource CustomCalendarDayButton}"/>
+                                            <Setter Property="CalendarButtonStyle" Value="{StaticResource CustomCalendarButton}"/>
+                                        </Style>
+                                        <Style TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignFloatingHintDatePicker}">
+                                            <Setter Property="CalendarStyle" Value="{StaticResource CustomCalendar}"/>
+                                        </Style>
+                                    </DatePicker.Resources>
+
+                                </DatePicker>
+                                <Button x:Name="LoadChart" Click="LoadChart_Click" Background="#FF2A4191" Content="Load Chart" MouseEnter="ButtonGDP_MouseEnter" MouseLeave="ButtonGDP_MouseLeave"  HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FFD2F9A3" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" BorderBrush="#FFD2F9A3" Margin="20,5,5,5" FontSize="16"/>
+                                <Button x:Name="LoadTable" Click="LoadTable_Click" Background="#FF2A4191" Content="Load Table" MouseEnter="ButtonGDP_MouseEnter" MouseLeave="ButtonGDP_MouseLeave"  HorizontalAlignment="Center" Height="Auto" Grid.Row="1" Foreground="#FFD2F9A3" Padding="20,8" UseLayoutRounding="True" FontWeight="Bold" BorderBrush="#FFD2F9A3" Margin="20,5,5,5" FontSize="16"/>
                             
+                            </StackPanel>
+                            <TextBlock x:Name="notificationLabel" Margin="16,0,0,0" FontWeight="Bold" Foreground="#FF6272AA" Visibility="Hidden"/>
                         </StackPanel>
-                        
                     </materialDesign:ColorZone>
                    
                 </Grid>
@@ -100,14 +145,13 @@
             
 
         </StackPanel>
-        <TextBlock Grid.Row="2" x:Name="notificationLabel" Margin="15,0,0,0" Padding="4,10" FontWeight="Bold" Foreground="#FF6272AA" HorizontalAlignment="Left" Grid.RowSpan="2" Visibility="Hidden" VerticalAlignment="Top"/>
+        
+        <Label Grid.Row="2" x:Name="label1" FontSize="18" Margin="15,0,0,0" Padding="4,10" FontWeight="Bold" Content="" Foreground="#FF2A4191"/>
+        <Wpf:CartesianChart Name="columnChart" Zoom="X" Margin="15,40,25,150" Grid.Row="3"/>
 
-        <Label Grid.Row="3" x:Name="label1" FontSize="18" Margin="15,0,0,0" Padding="4,10" FontWeight="Bold" Content="" Foreground="#FF2A4191"/>
-        <Wpf:CartesianChart Name="columnChart" Zoom="X" Margin="15,40,25,150" Grid.Row="4"/>
+        <Label Grid.Row="2" Name="label" FontSize="18"  Padding="4,10" FontWeight="Bold" Content="" Foreground="#FF2A4191" Margin="15,0,0,0" Grid.Column="1"/>
 
-        <Label Grid.Row="3" Name="label" FontSize="18"  Padding="4,10" FontWeight="Bold" Content="" Foreground="#FF2A4191" Margin="15,0,0,0" Grid.Column="1"/>
-
-        <Wpf:CartesianChart Name="lineChart" Zoom="X" Margin="15,40,45,150" Grid.Row="4" Grid.Column="1"/>
+        <Wpf:CartesianChart Name="lineChart" Zoom="X" Margin="15,40,45,150" Grid.Row="3" Grid.Column="1"/>
 
         
     </Grid>

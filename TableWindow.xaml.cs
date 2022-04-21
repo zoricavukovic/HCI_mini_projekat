@@ -22,12 +22,12 @@ namespace MiniProjekatHCI
 
     public class TableRow
     {
-        public String Date { get; set; }
+        public DateTime Date { get; set; }
         public double Value { get; set; }
 
         public TableRow(DateTime timeVal, double value)
         {
-            Date = timeVal.ToString().Split(' ')[0];
+            Date = timeVal;
             Value = value;
         }
     }
@@ -37,15 +37,23 @@ namespace MiniProjekatHCI
     {
         private TableDTO tableDTO;
         public List<TableRow> tableData;
+        public double maxValue;
+        public double minValue;
 
 
         public TableWindow(TableDTO tableDTO)
         {
+            
             InitializeComponent();
             this.tableDTO = tableDTO;
             tableData = getAllItemsSource();
+            maxValue = tableData.Max(value => value.Value);
+            minValue = tableData.Min(value => value.Value);
+            NameToBrushConverter.minValue = minValue;
+            NameToBrushConverter.maxValue = maxValue;
             fillFields();
             fillTable();
+
         }
 
         private void fillFields()
@@ -88,9 +96,8 @@ namespace MiniProjekatHCI
             {
                 ValueColumn.Header = "Percent (%)";
             }
-            
-            tableData.ForEach(t => dt.Items.Add(t));
 
+            tableData.ForEach(t => dt.Items.Add(t));
         }
 
         private List<TableRow> getAllItemsSource()
@@ -98,19 +105,9 @@ namespace MiniProjekatHCI
             List<TableRow> rows = new List<TableRow>();
             var items = this.tableDTO.DataToDisplay;
             foreach (var i in items) {
-                if (this.tableDTO.GDPselected)
-                {
-                    rows.Add(new TableRow(i.date, Math.Round(i.valueD, 2)));
-                }
-                else
-                {
-                    rows.Add(new TableRow(i.date, Math.Round(i.valueD, 2)));
-                }
+                rows.Add(new TableRow(i.date, Math.Round(i.valueD, 2)));
             }
             return rows;
         }
-
-
-        
     }
 }

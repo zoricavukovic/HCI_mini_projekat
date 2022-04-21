@@ -8,14 +8,18 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     mc:Ignorable="d"
     Title="Table view"
-    Height="450"
+    Height="500"
     Width="600"
     Background="#FFDCFFB3"
     Icon="iconApp.png">
+
+    <Window.Resources>
+        <local:NameToBrushConverter x:Key="nameToBrushConverter"></local:NameToBrushConverter>
+    </Window.Resources>
     <Grid
         Name="MainGrid"
         Background="#FFDCFFB3"
-        Margin="0,0,-52.5,-153">
+        Margin="15,5">
         <Grid.RowDefinitions>
             <RowDefinition
                 Height="Auto" />
@@ -117,7 +121,8 @@
                 BorderThickness ="1, 1, 1, 1"
                 BorderBrush="#FF2A4191"
                 ScrollViewer.CanContentScroll="True"
-                AlternatingRowBackground="#FFDCFFB3" HorizontalAlignment="Center" Margin="0,5,0,0">
+                AlternatingRowBackground="#FFDCFFB3" HorizontalAlignment="Center" Margin="0,5,0,15" VerticalAlignment="Top"
+            >
             <DataGrid.Resources>
                 <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" TargetType="{x:Type DataGridColumnHeader}" >
                     <Setter Property="Background" Value="#FFD2F9A3" />
@@ -132,9 +137,15 @@
 
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Date" Width="*" Binding="{Binding Date}" FontSize="13"></DataGridTextColumn>
+                <DataGridTextColumn Header="Date" Width="*" Binding="{Binding Date, StringFormat=\{0:dd.MM.yyyy\}}" FontSize="13">
+                    
+                </DataGridTextColumn>
                 <DataGridTextColumn x:Name="ValueColumn" Header="Value" Width="*" Binding="{Binding Value}" FontSize="13">
-
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Background" Value="{Binding Value, Converter={StaticResource nameToBrushConverter}}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>

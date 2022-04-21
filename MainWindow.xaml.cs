@@ -112,11 +112,16 @@ namespace MiniProjekatHCI
                 FontSize = 14
 
             }) ;
+
+            Func<double, string> labFormat = value => value.ToString("C");
+            if (clickedTreasuryButton)
+                labFormat = value => value + "%";
+
             columnChart.AxisY.Add(new Axis
             {
                 Title = chartData.unit,
-                LabelFormatter = value => value.ToString("C"),
-                Foreground = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191")),
+                LabelFormatter = labFormat,
+                Foreground = (Brush)new BrushConverter().ConvertFrom("#FF2A4191"),
                 FontSize = 14
 
             });
@@ -152,11 +157,15 @@ namespace MiniProjekatHCI
 
             });
 
+            Func<double,string> labFormat = value => value.ToString("C");
+            if (clickedTreasuryButton)
+                labFormat = value => value + "%";
+
             lineChart.AxisY.Add(new Axis
             {
                 Title = chartData.unit,
-                LabelFormatter = value => value.ToString("C"),
-                Foreground = (Brush)(new BrushConverter().ConvertFrom("#FF2A4191")),
+                LabelFormatter = labFormat,
+                Foreground = (Brush)new BrushConverter().ConvertFrom("#FF2A4191"),
                 FontSize = 14
 
             });
